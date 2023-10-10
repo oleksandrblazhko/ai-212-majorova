@@ -1,3 +1,5 @@
+### Бачення програмного продукту
+
 **FOR**: adults who are artists or engaged in artistic activities with a vocational or higher education and an average income level or above.
 **WHO**: need an optimal microclimate in their workshop to achieve psychological and emotional stability during the creation of artworks, and require guidance on adjusting air humidity for best artistic results.
 **THE**: "HYGIMETER-ART"
