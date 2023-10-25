@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- Volohist -->
+	<xs:element name="Volohist">
+		<xs:complexType>
+			<xs:attribute name="ID" type="xs:integer" use="required"/>
+			<xs:attribute name="Vidnosna_Volohist" type="xs:decimal"/>
+			<xs:attribute name="Absolyutna_Volohist" type="xs:decimal"/>
+		</xs:complexType>
+	</xs:element>
+	<!-- Mikroklimat -->
+	<xs:element name="Mikroklimat">
+		<xs:complexType>
+			<xs:attribute name="ID" type="xs:integer" use="required"/>
+			<xs:attribute name="Temperatura" type="xs:string" use="required"/>
+			<xs:attribute name="Ventilyatsiya" type="xs:string"/>
+			<xs:attribute name="Rivny_Osvitlenosti" type="xs:decimal" use="required"/>
+			<xs:attribute name="Volohist_ID" type="xs:integer"/>
+		</xs:complexType>
+	</xs:element>
+	<!-- Korysuvach -->
+	<xs:element name="Korysuvach">
+		<xs:complexType>
+			<xs:attribute name="ID" type="xs:integer" use="required"/>
+			<xs:attribute name="Imya" type="xs:string" use="required"/>
+			<xs:attribute name="Prizvyshe" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<!-- ShablonPlanuStvorennya -->
+	<xs:element name="ShablonPlanuStvorennya">
+		<xs:complexType>
+			<xs:attribute name="ID" type="xs:integer" use="required"/>
+			<xs:attribute name="Potichne_Stanovyshche" type="xs:integer"/>
+			<xs:attribute name="Proekt_Optimalnogo_Mikroklimatu" type="xs:json"/>
+			<xs:attribute name="Prysroy" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<!-- ParametryPlanuStvorennya -->
+	<xs:element name="ParametryPlanuStvorennya">
+		<xs:complexType>
+			<xs:attribute name="ID" type="xs:integer" use="required"/>
+			<xs:attribute name="Temperaturnyi_Rezhym" type="xs:string" use="required"/>
+			<xs:attribute name="Veluchyna_Volohosti" type="xs:integer" use="required"/>
+			<xs:attribute name="Chas_Vklyuchennya_Osvitlennya" type="xs:date" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<!-- PlanMikroklimatu -->
+	<xs:element name="PlanMikroklimatu">
+		<xs:complexType>
+			<xs:attribute name="ID" type="xs:integer" use="required"/>
+			<xs:attribute name="ShablonPlanuStvorennya_ID" type="xs:integer"/>
+			<xs:attribute name="Potichne_Stanovyshche" type="xs:integer"/>
+			<xs:attribute name="Spysok_Parametriv" type="xs:string"/>
+			<xs:attribute name="Mikroklimat_ID" type="xs:integer"/>
+			<xs:attribute name="ParametryPlanuStvorennya_ID" type="xs:integer"/>
+			<xs:attribute name="Korysuvach_ID" type="xs:integer"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
