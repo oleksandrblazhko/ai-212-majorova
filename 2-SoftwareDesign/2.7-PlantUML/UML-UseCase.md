@@ -1,1 +1,1 @@
-![UML-UseCase](https://github.com/oleksandrblazhko/ai-212-majorova/assets/90724127/593e6a98-d908-4f43-8f34-133826e5a222)
+![](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/oleksandrblazhko/ai-212-majorova/laboratory-work-7/2-SoftwareDesign/2.7-PlantUML/UML-UseCase.puml)
