@@ -1,0 +1,17 @@
+@startuml
+!theme superhero-outline
+
+title UML-UseCase
+left to right direction
+rectangle HYGIMETER.ART {
+   actor "Customer" as customer
+
+   usecase "UC1: Browse Catalog" as BrowseCatalog
+   usecase "UC2: Place Order" as PlaceOrder
+
+   customer --> BrowseCatalog
+   customer --> PlaceOrder
+   BrowseCatalog .> PlaceOrder : <<include>>
+}
+
+@enduml
