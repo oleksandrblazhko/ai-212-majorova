@@ -3,24 +3,24 @@
 -- Таблиця Volohist
 CREATE TABLE Volohist (
     ID serial PRIMARY KEY,
-    Vidnosna_Volohist numeric(9,2) CHECK (Vidnosna_Volohist BETWEEN 0 AND 100),
-    Absolyutna_Volohist numeric(9,2) CHECK (Absolyutna_Volohist BETWEEN 0 AND 100)
+    Vidnosna_Volohist numeric CHECK (Vidnosna_Volohist > 0),
+    Absolyutna_Volohist numeric CHECK (Absolyutna_Volohist > 0)
 );
 
 -- Таблиця Mikroklimat
 CREATE TABLE Mikroklimat (
     ID serial PRIMARY KEY,
-    Temperatura varchar(255) NOT NULL,
-    Ventilyatsiya varchar(255) NULL,
-    Rivny_Osvitlenosti numeric NOT NULL,
+    Temperatura varchar(20) NOT NULL,
+    Ventilyatsiya varchar(150) NULL,
+    Rivny_Osvitlenosti numeric CHECK (Rivny_Osvitlenosti > 0) NOT NULL,
     Volohist_ID int
 );
 
 -- Таблиця Korysuvach
 CREATE TABLE Korysuvach (
     ID serial PRIMARY KEY,
-    Imya varchar(255) NOT NULL,
-    Prizvyshe varchar(255) NOT NULL
+    Imya varchar(300) NOT NULL,
+    Prizvyshe varchar(300) NOT NULL
 );
 
 -- Таблиця ShablonPlanuStvorennya
@@ -34,7 +34,7 @@ CREATE TABLE ShablonPlanuStvorennya (
 -- Таблиця ParametryPlanuStvorennya
 CREATE TABLE ParametryPlanuStvorennya (
     ID serial PRIMARY KEY,
-    Temperaturnyi_Rezhym varchar(255) CHECK (Temperaturnyi_Rezhym::integer BETWEEN -50 AND 50) NOT NULL,
+    Temperaturnyi_Rezhym varchar(100) CHECK (Temperaturnyi_Rezhym::integer BETWEEN -50 AND 50) NOT NULL,
     Veluchyna_Volohosti integer CHECK (Veluchyna_Volohosti BETWEEN 0 AND 100) NOT NULL,
     Chas_Vklyuchennya_Osvitlennya date NOT NULL
 );
