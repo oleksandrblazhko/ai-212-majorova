@@ -1,5 +1,5 @@
 @startuml
-!theme superhero-outline
+!theme cerulean
 
 title UML-UseCase
 left to right direction
