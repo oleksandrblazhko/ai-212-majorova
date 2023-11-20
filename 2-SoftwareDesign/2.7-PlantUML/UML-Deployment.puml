@@ -1,0 +1,22 @@
+@startuml
+!theme cerulean
+
+title Software Architect Concept on PL level
+
+skinparam componentStyle uml1
+
+node "<<PC>>" as pc {
+	node "<<OS Windows, OS Linux>>" {
+	  node "<<Web-browser>>" {
+		  component [ *.js(Angular)]
+	  }
+	}
+}
+
+interface keyBoard 
+interface computerMouse
+
+keyBoard - pc
+computerMouse - pc
+
+@enduml
