@@ -1,78 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-  <!-- Definition for Volohist -->
-  <xs:element name="Volohist">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="ID" type="xs:int"/>
-        <xs:element name="Vidnosna_Volohist" type="xs:decimal" minOccurs="0"/>
-        <xs:element name="Absolyutna_Volohist" type="xs:decimal" minOccurs="0"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
+    <!-- User Table -->
+    <xs:element name="User">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int" />
+                <xs:element name="name" type="xs:string" maxLength="359" />
+                <xs:element name="surname" type="xs:string" maxLength="350" />
+                <xs:element name="email" type="xs:string" maxLength="255" />
+                <xs:element name="password" type="xs:string" maxLength="255" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-  <!-- Definition for Mikroklimat -->
-  <xs:element name="Mikroklimat">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="ID" type="xs:int"/>
-        <xs:element name="Temperatura" type="xs:string"/>
-        <xs:element name="Ventilyatsiya" type="xs:string" minOccurs="0"/>
-        <xs:element name="Rivny_Osvitlenosti" type="xs:decimal"/>
-        <xs:element name="Volohist_ID" type="xs:int"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
+    <!-- Microclimate Table -->
+    <xs:element name="Microclimate">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int" />
+                <xs:element name="temperature" type="xs:string" maxLength="20" />
+                <xs:element name="ventilation" type="xs:string" maxLength="150" />
+                <xs:element name="lightLevel" type="xs:decimal" />
+                <xs:element name="humidity_id" type="xs:int" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-  <!-- Definition for Korysuvach -->
-  <xs:element name="Korysuvach">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="ID" type="xs:int"/>
-        <xs:element name="Imya" type="xs:string"/>
-        <xs:element name="Prizvyshe" type="xs:string"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
+    <!-- Humidity Table -->
+    <xs:element name="Humidity">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int" />
+                <xs:element name="relativeHumidity" type="xs:decimal" />
+                <xs:element name="absoluteHumidity" type="xs:decimal" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-  <!-- Definition for ShablonPlanuStvorennya -->
-  <xs:element name="ShablonPlanuStvorennya">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="ID" type="xs:int"/>
-        <xs:element name="Potichne_Stanovyshche" type="xs:int" minOccurs="0"/>
-        <xs:element name="Proekt_Optimalnogo_Mikroklimatu" type="xs:string" minOccurs="0"/> <!-- JSON as string -->
-        <xs:element name="Prysroy" type="xs:string" minOccurs="0"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
+    <!-- PlanParameters Table -->
+    <xs:element name="PlanParameters">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int" />
+                <xs:element name="temperatureSked" type="xs:string" maxLength="100" />
+                <xs:element name="lightsOffTime" type="xs:dateTime" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-  <!-- Definition for ParametryPlanuStvorennya -->
-  <xs:element name="ParametryPlanuStvorennya">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="ID" type="xs:int"/>
-        <xs:element name="Temperaturnyi_Rezhym" type="xs:string"/>
-        <xs:element name="Veluchyna_Volohosti" type="xs:int"/>
-        <xs:element name="Chas_Vklyuchennya_Osvitlennya" type="xs:date"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
+    <!-- PlanPattern Table -->
+    <xs:element name="PlanPattern">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int" />
+                <xs:element name="optimalMicroclimate_id" type="xs:int" />
+                <xs:element name="device" type="xs:string" maxLength="200" />
+                <xs:element name="planParameters_id" type="xs:int" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-  <!-- Definition for PlanMikroklimatu -->
-  <xs:element name="PlanMikroklimatu">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="ID" type="xs:int"/>
-        <xs:element name="ShablonPlanuStvorennya_ID" type="xs:int"/>
-        <xs:element name="Potichne_Stanovyshche" type="xs:int" minOccurs="0"/>
-        <xs:element name="Spysok_Parametriv" type="xs:string" minOccurs="0"/> <!-- Text as string -->
-        <xs:element name="Mikroklimat_ID" type="xs:int"/>
-        <xs:element name="ParametryPlanuStvorennya_ID" type="xs:int"/>
-        <xs:element name="Korysuvach_ID" type="xs:int"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
+    <!-- MicroclimatePlan Table -->
+    <xs:element name="MicroclimatePlan">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int" />
+                <xs:element name="planPattern_id" type="xs:int" />
+                <xs:element name="initiallyMicroclimate_id" type="xs:int" />
+                <xs:element name="user_id" type="xs:int" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
 </xs:schema>
