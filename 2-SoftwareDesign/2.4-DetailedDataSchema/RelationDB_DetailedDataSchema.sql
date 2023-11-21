@@ -1,64 +1,72 @@
--- Створення таблиць
-
--- Таблиця Volohist
-CREATE TABLE Volohist (
-    ID serial PRIMARY KEY,
-    Vidnosna_Volohist numeric(9,2) CHECK (Vidnosna_Volohist BETWEEN 0 AND 100),
-    Absolyutna_Volohist numeric(9,2) CHECK (Absolyutna_Volohist BETWEEN 0 AND 100)
+-- Create User table
+CREATE TABLE "User" (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(359),
+    surname VARCHAR(350),
+    email VARCHAR(255) UNIQUE,
+    password VARCHAR(255)
 );
 
--- Таблиця Mikroklimat
-CREATE TABLE Mikroklimat (
-    ID serial PRIMARY KEY,
-    Temperatura varchar(255) NOT NULL,
-    Ventilyatsiya varchar(255) NULL,
-    Rivny_Osvitlenosti numeric NOT NULL,
-    Volohist_ID int
+-- Create Microclimate table
+CREATE TABLE Microclimate (
+    id SERIAL PRIMARY KEY,
+    temperature VARCHAR(20),
+    ventilation VARCHAR(150),
+    lightLevel NUMERIC CHECK (lightLevel > 0),
+    humidity_id INT
 );
 
--- Таблиця Korysuvach
-CREATE TABLE Korysuvach (
-    ID serial PRIMARY KEY,
-    Imya varchar(255) NOT NULL,
-    Prizvyshe varchar(255) NOT NULL
+-- Create Humidity table
+CREATE TABLE Humidity (
+    id SERIAL PRIMARY KEY,
+    relativeHumidity NUMERIC CHECK (relativeHumidity > 0),
+    absoluteHumidity NUMERIC CHECK (absoluteHumidity > 0)
 );
 
--- Таблиця ShablonPlanuStvorennya
-CREATE TABLE ShablonPlanuStvorennya (
-    ID serial PRIMARY KEY,
-    Potichne_Stanovyshche integer,
-    Proekt_Optimalnogo_Mikroklimatu json,
-    Prysroy varchar(255)
+-- Create PlanParameters table
+CREATE TABLE PlanParameters (
+    id SERIAL PRIMARY KEY,
+    temperatureSked VARCHAR(100),
+    lightsOffTime TIMESTAMP
 );
 
--- Таблиця ParametryPlanuStvorennya
-CREATE TABLE ParametryPlanuStvorennya (
-    ID serial PRIMARY KEY,
-    Temperaturnyi_Rezhym varchar(255) CHECK (Temperaturnyi_Rezhym::integer BETWEEN -50 AND 50) NOT NULL,
-    Veluchyna_Volohosti integer CHECK (Veluchyna_Volohosti BETWEEN 0 AND 100) NOT NULL,
-    Chas_Vklyuchennya_Osvitlennya date NOT NULL
+-- Create PlanPattern table
+CREATE TABLE PlanPattern (
+    id SERIAL PRIMARY KEY,
+    optimalMicroclimate_id INT,
+    device VARCHAR(200),
+    planParameters_id INT
 );
 
--- Таблиця PlanMikroklimatu
-CREATE TABLE PlanMikroklimatu (
-    ID serial PRIMARY KEY,
-    ShablonPlanuStvorennya_ID int,
-    Potichne_Stanovyshche integer,
-    Spysok_Parametriv text NULL,
-    Mikroklimat_ID int,
-    ParametryPlanuStvorennya_ID int,
-    Korysuvach_ID int
+-- Create MicroclimatePlan table
+CREATE TABLE MicroclimatePlan (
+    id SERIAL PRIMARY KEY,
+    planPattern_id INT,
+    initiallyMicroclimate_id INT,
+    user_id INT
 );
 
--- Створення зовнішніх ключів з on update cascade і on delete cascade
+-- Add foreign key constraints
+ALTER TABLE Microclimate
+ADD CONSTRAINT fk_humidity_id
+FOREIGN KEY (humidity_id) REFERENCES Humidity(id);
 
--- Зовнішній ключ для таблиці Mikroklimat
-ALTER TABLE Mikroklimat
-ADD FOREIGN KEY (Volohist_ID) REFERENCES Volohist(ID) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE PlanPattern
+ADD CONSTRAINT fk_optimalMicroclimate_id
+FOREIGN KEY (optimalMicroclimate_id) REFERENCES Microclimate(id);
 
--- Зовнішні ключі для таблиці PlanMikroklimatu
-ALTER TABLE PlanMikroklimatu
-ADD FOREIGN KEY (ShablonPlanuStvorennya_ID) REFERENCES ShablonPlanuStvorennya(ID) ON UPDATE CASCADE ON DELETE CASCADE,
-ADD FOREIGN KEY (Mikroklimat_ID) REFERENCES Mikroklimat(ID) ON UPDATE CASCADE ON DELETE CASCADE,
-ADD FOREIGN KEY (ParametryPlanuStvorennya_ID) REFERENCES ParametryPlanuStvorennya(ID) ON UPDATE CASCADE ON DELETE CASCADE,
-ADD FOREIGN KEY (Korysuvach_ID) REFERENCES Korysuvach(ID) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE PlanPattern
+ADD CONSTRAINT fk_planParameters_id
+FOREIGN KEY (planParameters_id) REFERENCES PlanParameters(id);
+
+ALTER TABLE MicroclimatePlan
+ADD CONSTRAINT fk_planPattern_id
+FOREIGN KEY (planPattern_id) REFERENCES PlanPattern(id);
+
+ALTER TABLE MicroclimatePlan
+ADD CONSTRAINT fk_initiallyMicroclimate_id
+FOREIGN KEY (initiallyMicroclimate_id) REFERENCES Microclimate(id);
+
+ALTER TABLE MicroclimatePlan
+ADD CONSTRAINT fk_user_id
+FOREIGN KEY (user_id) REFERENCES "User"(id);
