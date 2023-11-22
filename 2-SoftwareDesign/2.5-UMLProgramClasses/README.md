@@ -1,3 +1,4 @@
 ### UML-діаграма програмних класів
 
-![UMLProgramClasses](https://github.com/oleksandrblazhko/ai-212-majorova/assets/90724127/7bc648e8-3d64-4e7c-87a1-c4f5d6bdd337)
+
+![UMLProgramClasses](https://github.com/oleksandrblazhko/ai-212-majorova/assets/90724127/5bb64275-d7f0-48ff-9a68-0c1fed251b2c)
