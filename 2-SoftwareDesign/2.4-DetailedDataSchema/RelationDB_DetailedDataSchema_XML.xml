@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!-- User Table -->
+    <xs:element name="User">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int" />
+                <xs:element name="name" type="xs:string" maxLength="359" />
+                <xs:element name="surname" type="xs:string" maxLength="350" />
+                <xs:element name="email" type="xs:string" maxLength="255" />
+                <xs:element name="password" type="xs:string" maxLength="255" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Microclimate Table -->
+    <xs:element name="Microclimate">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int" />
+                <xs:element name="temperature" type="xs:string" maxLength="20" />
+                <xs:element name="ventilation" type="xs:string" maxLength="150" />
+                <xs:element name="lightLevel" type="xs:decimal" />
+                <xs:element name="humidity_id" type="xs:int" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Humidity Table -->
+    <xs:element name="Humidity">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int" />
+                <xs:element name="relativeHumidity" type="xs:decimal" />
+                <xs:element name="absoluteHumidity" type="xs:decimal" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- PlanParameters Table -->
+    <xs:element name="PlanParameters">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int" />
+                <xs:element name="temperatureSked" type="xs:string" maxLength="100" />
+                <xs:element name="lightsOffTime" type="xs:dateTime" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- PlanPattern Table -->
+    <xs:element name="PlanPattern">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int" />
+                <xs:element name="optimalMicroclimate_id" type="xs:int" />
+                <xs:element name="device" type="xs:string" maxLength="200" />
+                <xs:element name="planParameters_id" type="xs:int" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- MicroclimatePlan Table -->
+    <xs:element name="MicroclimatePlan">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int" />
+                <xs:element name="planPattern_id" type="xs:int" />
+                <xs:element name="initiallyMicroclimate_id" type="xs:int" />
+                <xs:element name="user_id" type="xs:int" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

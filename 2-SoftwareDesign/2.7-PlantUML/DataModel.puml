@@ -1,0 +1,36 @@
+@startuml
+!theme cerulean
+
+title Data Model
+left to right direction
+hide circle
+
+entity "User" as t01 {
+    (PK) id
+    --
+    name
+    surname
+    email
+    password
+}
+
+entity "PlanPattern" as t02 {
+    (PK) id
+    --
+    (FK) optimalMicroclimate
+    device
+    (FK) planParameters_id
+}
+
+entity "MicroclimatePlan" as t03 {
+    (PK) id
+    --
+    (FK) planPattern_id
+    (FK) initiallyMicroclimate_id
+    (FK) user_id
+}
+
+t01 --{ t03
+t02 --{ t03 
+
+@enduml
