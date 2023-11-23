@@ -9,5 +9,5 @@
 | FR2.2 | Програмний продукт відображає список можливостей для створення плану мікроклімату | PlanPattern | findAllPatterns() |
 | FR2.3 | Користувач вибирає шаблон плану мікроклімату, який його цікавить | PlanPattern | createPlanPattern (optimalMicroclimate: Microclimate, device: String, planParameters: PlanParameters) |
 | FR2.4 | Програмний продукт відображає список параметрів вибраного шаблону плану мікроклімату | PlanPattern | findPatternById (id: int) |
-| FR2.5 | Користувач налаштовує параметри плану мікроклімату | MicroclimatePlan | updatePlan() |
+| FR2.5 | Користувач налаштовує параметри плану мікроклімату | PlanPattern | updatePlanPattern(planPattern: PlanPattern) |
 | FR2.6 | Програмний продукт надає готовий план мікроклімату | MicroclimatePlan | findPlanByUser(user: User) |
