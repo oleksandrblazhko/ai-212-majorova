@@ -41,7 +41,7 @@ CREATE TABLE PlanPattern (
 -- Create Theme table
 CREATE TABLE Theme (
     id INT PRIMARY KEY,
-    title VARCHAR(255)
+    title VARCHAR(255) CHECK (title ~ '^([^#@%!?/\\$]{0,254})$')
 );
 
 -- Create TopicsInfo table
