@@ -8,4 +8,4 @@
 <br> Рисунок 3 - Фрагмент реалізації сервісу PlanPattern із усіма методами (2 частина)<br>
 
 ![ConstructMethods3](https://github.com/oleksandrblazhko/ai-212-majorova/assets/90724127/3190b2b3-93c5-4f44-9679-29f14c52e18c)
-<br> Рисунок 3 - Фрагмент реалізації сервісу для перетворення даних із звичайного класу в Data Transfer Object<br>
+<br> Рисунок 4 - Фрагмент реалізації сервісу для перетворення даних із звичайного класу в Data Transfer Object<br>
