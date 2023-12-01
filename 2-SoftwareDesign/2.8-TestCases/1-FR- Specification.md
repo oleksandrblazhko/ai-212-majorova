@@ -21,11 +21,10 @@
 - умова 11. Час виключення світла має бути заповненим.
 
 ### Вихідні параметри:
-- значення = *HTTP 200 OK* - Користувач успішно налаштував параметри плану мікроклімату;
-- значення = *HTTP 422/HTTP 400 Bad request* - Поточна температура не відповідає умовам;
-- значення = *HTTP 422/HTTP 400 Bad request* - Вказаний температурний режим не відповідає умовам;
-- значення = *HTTP 422/HTTP 400 Bad request* - Тип вентиляції приміщення не відповідає умовам;
-- значення = *HTTP 422* - Рівень освітленості не відповідає умовам;
-- значення = *HTTP 422/HTTP 400 Bad request* - Вологість не відповідає умовам;
-- значення = *HTTP 400 Bad request* - Час виключення світла не відповідає умовам;
-- значення = *200* - Програмним продуктом було знайденно пристрій/пристрої;
+- значення = *HTTP 200 OK* - Plan pattern has been updated successfully;
+- значення = *HTTP 404 ENTITY_NOT_FOUND* - Plan pattern not found;
+- значення = *HTTP 400 INVALID_DATA* - Max size of temperature is 20 characters;
+- значення = *HTTP 400 INVALID_DATA* - Max size of temperature schedule is 100 characters;
+- значення = *HTTP 400 INVALID_DATA* - Max size of ventilation is 100 characters;
+- значення = *HTTP 400 INVALID_DATA* - Humidity levels must be greater than or equal to 1;
+- значення = *HTTP 400 INVALID_DATA* - Time when lights go off must be not null on updating parameters;
