@@ -119,23 +119,22 @@ public interface PlanPatternService {
 
 package com.example.hygimeter.service;
 
+import com.example.hygimeter.dto.HumidityDTO;
+import com.example.hygimeter.dto.MicroclimateDTO;
+import com.example.hygimeter.dto.PlanParametersDTO;
 import com.example.hygimeter.dto.PlanPatternDTO;
+import com.example.hygimeter.dto.group.OnCreate;
+import com.example.hygimeter.dto.group.OnUpdate;
+import com.example.hygimeter.exception.EntityNotFoundException;
+import com.example.hygimeter.exception.StatusCodes;
+import com.example.hygimeter.exception.InvalidDataException;
 import com.example.hygimeter.mapper.PlanPatternMapper;
+import com.example.hygimeter.model.Humidity;
+import com.example.hygimeter.model.Microclimate;
+import com.example.hygimeter.model.PlanParameters;
 import com.example.hygimeter.model.PlanPattern;
 import com.example.hygimeter.repository.PlanPatternRepository;
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
-package com.example.hygimeter.service;
-
-import com.example.hygimeter.dto.PlanPatternDTO;
-import com.example.hygimeter.mapper.PlanPatternMapper;
-import com.example.hygimeter.model.PlanPattern;
-import com.example.hygimeter.repository.PlanPatternRepository;
-import jakarta.persistence.EntityNotFoundException;
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -148,31 +147,22 @@ public class PlanPatternServiceImpl implements PlanPatternService{
     private final PlanPatternRepository planPatternRepository;
     private final PlanPatternMapper planPatternMapper;
 
-
-    /**
-     * Створює новий PlanPattern.
-     * 
-     * @param planPatternDTO DTO PlanPattern, що містить дані для збереження.
-     * @return PlanPatternDTO DTO представлення новоствореного PlanPattern.
-     */
     @Override
     public PlanPatternDTO createPlanPattern(PlanPatternDTO planPatternDTO) {
         PlanPattern planPattern = planPatternMapper.toPlanPattern(planPatternDTO);
         return planPatternMapper.toPlanPatternDTO(planPatternRepository.save(planPattern));
     }
 
-    /**
-     * Оновлює існуючий PlanPattern.
-     * 
-     * @param planPatternDTO DTO PlanPattern, що містить оновлені дані.
-     * @return PlanPatternDTO DTO представлення оновленого PlanPattern.
-     * @throws EntityNotFoundException якщо PlanPattern, який потрібно оновити, не знайдено.
-     */
     @Override
-    public PlanPatternDTO updatePlanPattern(PlanPatternDTO planPatternDTO) {
-        PlanPattern planPattern = planPatternRepository.findById(planPatternDTO.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Humidity not found"));
+    public PlanPatternDTO updatePlanPattern(Integer id, PlanPatternDTO planPatternDTO) {
 
+        // Fetch the existing plan pattern
+        PlanPattern planPattern = planPatternRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(), "Plan pattern not found"));
+
+        planPatternValidation(planPatternDTO, OnUpdate.class);
+
+        // If everything is fine, update the plan pattern
         PlanPattern newPlanPattern = planPatternMapper.toPlanPattern(planPatternDTO);
         planPattern.setMicroclimatePlans(newPlanPattern.getMicroclimatePlans());
         planPattern.setDevice(newPlanPattern.getDevice());
@@ -181,46 +171,80 @@ public class PlanPatternServiceImpl implements PlanPatternService{
         return planPatternMapper.toPlanPatternDTO(planPatternRepository.save(planPattern));
     }
 
-
-    /**
-     * Видаляє PlanPattern за його ID.
-     * 
-     * @param id ID PlanPattern, який потрібно видалити.
-     * @throws EntityNotFoundException якщо PlanPattern, який потрібно видалити, не знайдено.
-     */
     @Override
     public void deletePlanPattern(Integer id) {
         PlanPattern planPattern = planPatternRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Plan Pattern not found"));
+                .orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(), "Plan Pattern not found"));
 
         planPatternRepository.deleteById(planPattern.getId());
     }
 
-    
-    /**
-     * Отримує PlanPattern за його ID.
-     * 
-     * @param id ID PlanPattern, який потрібно отримати.
-     * @return PlanPatternDTO DTO представлення отриманого PlanPattern.
-     * @throws EntityNotFoundException якщо PlanPattern не знайдено.
-     */
     @Override
     public PlanPatternDTO getPlanPatternById(Integer id) {
         PlanPattern planPattern = planPatternRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Plan Pattern not found"));
+                .orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(), "Plan Pattern not found"));
 
-        return planPatternMapper.toPlanPatternDTO(planPatternRepository.save(planPattern));
+        return planPatternMapper.toPlanPatternDTO(planPattern);
     }
 
-    /**
-     * Отримує всі PlanPatterns.
-     * 
-     * @return List<PlanPatternDTO> Список DTO представлень усіх PlanPatterns.
-     */
     @Override
     public List<PlanPatternDTO> getAllPlanPatterns() {
         List<PlanPattern> planPatterns = planPatternRepository.findAll();
         return planPatternMapper.toPlanPatternDTOS(planPatterns);
+    }
+
+    private void planPatternValidation(PlanPatternDTO planPatternDTO, Class<?> validationGroup) {
+        MicroclimateDTO microclimate = planPatternDTO.getMicroclimateDTO();
+        HumidityDTO humidity = microclimate.getHumidity();
+        PlanParametersDTO planParameters = planPatternDTO.getPlanParametersDTO();
+
+        // Assuming that an ID of null means this is a create operation
+        boolean isCreateOperation = (planPatternDTO.getId() == null);
+
+        if (isCreateOperation && validationGroup.equals(OnCreate.class)) {
+            // Perform validations specific to OnCreate group
+            if (planPatternDTO.getDevice() != null) {
+                throw new InvalidDataException(StatusCodes.INVALID_DATA.name(), "Device must be null at fulling the form");
+            }
+            if (microclimate != null) {
+                throw new InvalidDataException(StatusCodes.INVALID_DATA.name(), "Microclimate should be null while 1st time creating");
+            }
+            if (planParameters == null) {
+                throw new InvalidDataException(StatusCodes.INVALID_DATA.name(), "Plan parameters cannot be null");
+            }
+            if (humidity.getRelativeHumidity() != null) {
+                throw new InvalidDataException(StatusCodes.INVALID_DATA.name(), "Relative humidity must be null on creating plan parameters");
+            }
+            if (humidity.getAbsoluteHumidity() != null) {
+                throw new InvalidDataException(StatusCodes.INVALID_DATA.name(), "Absolute humidity must be null on creating plan parameters");
+            }
+        } else if (!isCreateOperation && validationGroup.equals(OnUpdate.class)) {
+            // Perform validations specific to OnUpdate group
+            if (microclimate.getTemperature().length() > 20) {
+                throw new InvalidDataException(StatusCodes.INVALID_DATA.name(), "Max size of temperature is 20 characters");
+            }
+            if (microclimate.getVentilation().length() > 100) {
+                throw new InvalidDataException(StatusCodes.INVALID_DATA.name(), "Max size of ventilation is 100 characters");
+            }
+            if (microclimate.getLightLevel() <= 0) {
+                throw new InvalidDataException(StatusCodes.INVALID_DATA.name(), "Light level must be greater than 0");
+            }
+            if (humidity.getRelativeHumidity() == null || humidity.getRelativeHumidity() <= 0) {
+                throw new InvalidDataException(StatusCodes.INVALID_DATA.name(), "Relative humidity must be not null and greater than 0 on updating parameters");
+            }
+            if (humidity.getAbsoluteHumidity() == null || humidity.getAbsoluteHumidity() <= 0) {
+                throw new InvalidDataException(StatusCodes.INVALID_DATA.name(), "Absolute humidity must be not null and greater than 0 on updating parameters");
+            }
+            if (planParameters.getTemperatureSked() == null || planParameters.getTemperatureSked().isEmpty()) {
+                throw new InvalidDataException(StatusCodes.INVALID_DATA.name(), "Temperature schedule must be not null and not empty on updating parameters");
+            }
+            if (planParameters.getTemperatureSked().length() > 100) {
+                throw new InvalidDataException(StatusCodes.INVALID_DATA.name(), "Max size of temperature schedule is 100 characters");
+            }
+            if (planParameters.getLightsOffTime() == null || planParameters.getLightsOffTime().getHour() > 23 || planParameters.getLightsOffTime().getHour() < 0 ) {
+                throw new InvalidDataException(StatusCodes.INVALID_DATA.name(), "Time when lights go off must be not null on updating parameters");
+            }
+        }
     }
 }
 
