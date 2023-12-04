@@ -1,0 +1,14 @@
+name: DataSchemaCodeConvention
+on:
+  push:
+    branches: LW11 
+jobs:
+  sql_linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: "actions/checkout@v3"
+      - name: Start SQL Linter
+        run: |
+          pip install sqlfluff
+          sqlfluff lint $GITHUB_WORKSPACE/RelationDB_DetailedDataSchema.sql --dialect postgres
