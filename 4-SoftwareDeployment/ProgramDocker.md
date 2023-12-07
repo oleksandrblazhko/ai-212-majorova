@@ -1,68 +1,30 @@
-# Робота з Docker-образом та Docker-контейнером
+# Робота з Docker-образом та Docker-контейнером для запуску програми
 
-## Крок 1: Підготовка Dockerfile
-
-Dockerfile, який використовує базовий образ PostgreSQL та встановлює деякі метадані та змінні оточення, виглядає так:
-
-```dockerfile
-FROM postgres
-LABEL description="Second container"
-LABEL maintainer="Anastasia Mayorova"
-LABEL version="1.0"
-
-ENV POSTGRES_USER postgres
-ENV POSTGRES_PASSWORD root
-ENV POSTGRES_DB lab12
-
-COPY ./dbscript.sql /docker-entrypoint-initdb.d/
-```
-#### `FROM`
-- Використовується для вказівки базового образу. Наприклад, `FROM postgres` означає, що створюється свій образ, використовуючи як основу образ PostgreSQL.
-
-#### `LABEL`
-- Використовується для додавання метаданих до образу, таких як опис, автор образу, версія та інше. Наприклад: `LABEL version="1.0"`.
-
-#### `ENV`
-- Встановлює змінні оточення всередині образу. Ці змінні можуть бути використані у інших командах Dockerfile або коли контейнер буде запущений. Наприклад, `ENV POSTGRES_USER postgres` задає змінну оточення `POSTGRES_USER` зі значенням `postgres`.
-
-#### `COPY`
-- Копіює файли або папки з локальної системи в образ. Наприклад, `COPY ./dbscript.sql /docker-entrypoint-initdb.d/` копіює файл `dbscript.sql` з локальної системи в папку `/docker-entrypoint-initdb.d/` у контейнері.
-
-
-## Крок 2: Створення нового Docker-образу з іншою назвою, який бере команди з файлу Dockerfile у поточному каталозі запуску команди
-
-Для Створення образу використовується наступна команду в терміналі:
+## Крок 1: Завантажити Docker-образ для JDK з назвою openjdk
 
 ```bash
-docker image build -t maiorova-anastasia-2 ./
+docker pull openjdk
 ```
 
-Де `maiorova-anastasia-2` - назва новго Docker-образу
+## Крок 2: Запустити Docker-образ openjdk для компіляції Java-програми
 
-## Крок 3: Переглянути список створених образів
-
-Для перегляду списку створених Docker-образів виконуємо команду:
+Для Запуску образу для компіляції використовується наступна команду в терміналі:
 
 ```bash
-docker image ls
+docker run --name java-program -w //app -v /${PWD}://app --rm openjdk javac -cp "./postgresql-42.6.0.jar:./" ./Main.java
 ```
 
-## Крок 4: Переглянути інформацію про Docker-образ
+Де `./postgresql-42.6.0.jar:./` - назва драйверу, а `Main.java` - основний файл програми
 
-Для перегляду інформації про Docker-образ maiorova-anastasia-2 виконується команда:
+## Крок 3: Запустити Docker-образ openjdk для виконання Java-класу
+
+Для Запуску образу для виконання програми використовується наступна команду в терміналі:
 
 ```bash
-docker image inspect maiorova-anastasia-2
+docker run --name java-program -w //app -v /${PWD}://app --rm openjdk java -cp "./postgresql-42.6.0.jar:." Main
 ```
 
-Ця команда покаже список запущених контейнерів.
-
-## Крок 5: Взаємодія з контейнером
-
-Для взаємодії з вашим PostgreSQL сервером в контейнері використовуйте команду `docker exec`:
-
-```bash
-docker exec -it my-postgres-container psql -U postgres
-```
+## Результат виконання:
+![ProgramDockerExec](https://github.com/oleksandrblazhko/ai-212-majorova/assets/90724127/f766ec12-25e5-492c-9280-27e9199d796b)
 
 ---
